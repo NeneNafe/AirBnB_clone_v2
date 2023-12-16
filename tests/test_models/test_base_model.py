@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" """
+"""this is a class"""
 from models.base_model import BaseModel
 import unittest
 import datetime
@@ -9,16 +9,16 @@ import os
 
 
 class test_basemodel(unittest.TestCase):
-    """ """
+    """test for basemodel"""
 
     def __init__(self, *args, **kwargs):
-        """ """
+        """init test"""
         super().__init__(*args, **kwargs)
         self.name = 'BaseModel'
         self.value = BaseModel
 
     def setUp(self):
-        """ """
+        """setup test"""
         pass
 
     def tearDown(self):
