@@ -35,8 +35,10 @@ class FileStorage:
 
     def delete(self, obj=None):
         """deletes obj from __objects"""
-        if obj and obj in self.__objects:
-            del self.__objects[obj]
+        if obj:
+            key = f'{obj.__class__.__name__}.{obj.id}'
+            if key in FileStorage.__objects:
+                del self.__objects[key]
 
     def reload(self):
         """Loads storage dictionary from file"""
