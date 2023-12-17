@@ -18,8 +18,8 @@ class FileStorage:
                 if class_name == cls.__name__:
                     filter_objects[key] = value;
             return filter_objects
-        else:   
-            return FileStorage.__objects
+           
+        return FileStorage.__objects
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
