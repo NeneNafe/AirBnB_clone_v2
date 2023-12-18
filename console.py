@@ -124,14 +124,14 @@ class HBNBCommand(cmd.Cmd):
         dict_kv = {}
         for parameter in parameters:
             key, value = parameter.split('=')
-            value = value.replace('_', "")
+            value = value.replace('_', " ")
             if value.startswith('"') and value.endswith('"'):
-                value = value[1:-1].replace('"', r'\"').replace('"', '')
+                value = value[1:-1].replace('"', r'\"').replace('\\"', '"')
             elif '.' in value:
                 value = float(value)
             else:
                 value = int(value)
-            dict_kv.update({key:value})
+            dict_kv[key] = value
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
