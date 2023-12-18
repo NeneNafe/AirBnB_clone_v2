@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ Console Module """
 import cmd
+import inspect
 import sys
 from models.base_model import BaseModel
 from models.__init__ import storage
