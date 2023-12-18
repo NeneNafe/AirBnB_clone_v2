@@ -131,12 +131,12 @@ class HBNBCommand(cmd.Cmd):
                 value = float(value)
             else:
                 value = int(value)
-            if dict_kv is not None:
-                dict_kv[key] = value
+           
+            dict_kv[key] = value
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[class_name](**dict_kv)
+        new_instance = HBNBCommand.classes[class_name]()
         storage.save()
         print(new_instance)
 
