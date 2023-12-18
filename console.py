@@ -124,7 +124,6 @@ class HBNBCommand(cmd.Cmd):
         dict_kv = {}
         for parameter in parameters:
             key, value = parameter.split('=')
-            
             if key and value:
                 value = value.replace('_', " ")
                 if value.startswith('"') and value.endswith('"'):
@@ -133,8 +132,8 @@ class HBNBCommand(cmd.Cmd):
                     value = float(value)
                 else:
                     value = int(value)
-                if dict_kv is not None:
-                    dict_kv[key] = value
+                
+                dict_kv[key] = value
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
