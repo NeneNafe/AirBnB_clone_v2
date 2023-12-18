@@ -124,20 +124,19 @@ class HBNBCommand(cmd.Cmd):
         dict_kv = {}
         for parameter in parameters:
             key, value = parameter.split('=')
-            if key and value:
-                value = value.replace('_', " ")
-                if value.startswith('"') and value.endswith('"'):
-                    value = value[1:-1].replace('\\"', '').replace('"', r'\"')
-                elif '.' in value:
-                    value = float(value)
-                else:
-                    value = int(value)
-                
+            value = value.replace('_', " ")
+            if value.startswith('"') and value.endswith('"'):
+                value = value[1:-1].replace('\\"', '').replace('"', r'\"')
+            elif '.' in value:
+                value = float(value)
+            else:
+                value = int(value)
+            if dict_kv is not None:
                 dict_kv[key] = value
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[class_name]()
+        new_instance = HBNBCommand.classes[class_name](**dict_kv)
         storage.save()
         print(new_instance)
 
