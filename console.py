@@ -126,7 +126,7 @@ class HBNBCommand(cmd.Cmd):
             key, value = parameter.split('=')
             value = value.replace('_', " ")
             if value.startswith('"') and value.endswith('"'):
-                value = value[1:-1].replace('"', r'\"').replace('\\"', '"')
+                value = value[1:-1].replace('\\"', '').replace('"', r'\"')
             elif '.' in value:
                 value = float(value)
             else:
@@ -138,7 +138,6 @@ class HBNBCommand(cmd.Cmd):
         new_instance = HBNBCommand.classes[class_name]()
         storage.save()
         print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
