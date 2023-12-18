@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ Console Module """
 import cmd
+import re
 import sys
 from models.base_model import BaseModel
 from models.__init__ import storage
@@ -121,24 +122,40 @@ class HBNBCommand(cmd.Cmd):
         commands = args.split()
         class_name = commands[0]
         parameters = commands[1:]
+        
         dict_kv = {}
         for parameter in parameters:
             key, value = parameter.split('=')
-            value = value.replace('_', " ")
-            if value.startswith('"') and value.endswith('"'):
-                value = value[1:-1].replace('\\"', '').replace('"', r'\"')
-            elif '.' in value:
-                value = float(value)
-            else: 
-                value = int(value)
-            dict_kv[key] = value
+            if re.match('\".*\"', value):
+                value = value[1:-1] 
+            else:
+                if not re.match('.+=.+',parameter):
+                    
+                    continue
+                if not re.match('\".*\"', value) and not (value.replace(".", "", 1)).isdigit() or value.isdigit():
+                    continue
+                if isinstance(value, str):
+                    value = value.replace("_", " ")[1:-1]
+                if not isinstance(value, float):
+                    value = float(value)
+                if value.is_integer():
+                    value = int(value)
+                if key and value:
+                    if value is not None:
+                        dict_kv[key] = value
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[class_name]()
-        storage.save()
+        new_instance = HBNBCommand.classes[class_name](**dict_kv)
+        new_instance.save()
         print(new_instance.id)
-
+    def changefloat(value):
+        try:
+            float(value)
+        except ValueError:
+            return False
+        else:
+            return True
     def help_create(self):
         """ Help information for the create method """
         print("Creates a class of any type")
