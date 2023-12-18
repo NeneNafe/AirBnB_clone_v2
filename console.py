@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 """ Console Module """
 import cmd
-from curses.ascii import isdigit
-import inspect
 import sys
 from models.base_model import BaseModel
 from models.__init__ import storage
@@ -131,10 +129,8 @@ class HBNBCommand(cmd.Cmd):
                 value = value[1:-1].replace('\\"', '').replace('"', r'\"')
             elif '.' in value:
                 value = float(value)
-            elif value.isdigit():
-                value = int(value)
             else: 
-                return None
+                value = int(value)
             dict_kv[key] = value
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
