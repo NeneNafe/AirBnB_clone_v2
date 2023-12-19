@@ -16,7 +16,7 @@ class City(BaseModel, Base):
         state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
 
         places = relationship('Place', backref='city',
-                              cascade='all, delete, delete-orphan')
+                              cascade='all, delete, delete-orphan', single_parent=True)
 
         def __init__(self, **kwargs):
             self.id = str(uuid4())
