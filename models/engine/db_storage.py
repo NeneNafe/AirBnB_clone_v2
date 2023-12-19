@@ -73,4 +73,4 @@ class DBStorage:
         our_factory = sessionmaker(bind=self.__engine,
                                    expire_on_commit=False)
         Base.metadata.create_all(self.__engine)
-        self.__session = scooped_seassion(our_factory)
+        self.__session = scoped_session(our_factory)
