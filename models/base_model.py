@@ -19,6 +19,8 @@ class BaseModel:
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
         from models import storage
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
         if kwargs:
             if 'id' in kwargs:
                 self.id = kwargs['id']

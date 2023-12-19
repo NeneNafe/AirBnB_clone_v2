@@ -116,46 +116,39 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
+        def floatnintchecker(value):
+            try:
+                float(value)
+            except ValueError:
+                return False
+            return True
         if not args:
             print("** class name missing **")
             return
         commands = args.split()
         class_name = commands[0]
-        parameters = commands[1:]
-        
-        dict_kv = {}
-        for parameter in parameters:
-            key, value = parameter.split('=')
-            if re.match('\".*\"', value):
-                value = value[1:-1] 
-            else:
-                if not re.match('.+=.+',parameter):
-                    
-                    continue
-                if not re.match('\".*\"', value) and not (value.replace(".", "", 1)).isdigit() or value.isdigit():
-                    continue
-                if isinstance(value, str):
-                    value = value.replace("_", " ")[1:-1]
-                if not isinstance(value, float):
-                    value = float(value)
-                if value.is_integer():
-                    value = int(value)
-                if key and value:
-                    if value is not None:
-                        dict_kv[key] = value
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
+        parameters = commands[1:]
+        dict_kv = {}
+        for parameter in parameters:
+            if not re.match('.+=.+', parameter):
+                continue
+            key, value = parameter.split('=')
+            if not re.match('".*"', value):
+                if not floatnintchecker(value=value):
+                    continue
+                value = float(value)
+                if value.is_integer():
+                    value = int(value)
+            else:
+                value = value.replace("_", " ")[1:-1]
+            
+            dict_kv.update({key:value})
         new_instance = HBNBCommand.classes[class_name](**dict_kv)
         new_instance.save()
         print(new_instance.id)
-    def changefloat(value):
-        try:
-            float(value)
-        except ValueError:
-            return False
-        else:
-            return True
     def help_create(self):
         """ Help information for the create method """
         print("Creates a class of any type")
