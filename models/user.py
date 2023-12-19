@@ -16,7 +16,10 @@ class User(BaseModel, Base):
         password = Column(String(128), nullable=False)
         first_name = Column(String(128), nullable=True)
         last_name = Column(String(128), nullable=True)
-        places = relationship('User', backref='places', cascade='all, delete, delete-orphan')
+        places = relationship(
+            'User', backref='places', cascade='all, delete, delete-orphan'
+            )
+
         def __init__(self, *args, **kwargs):
             self.id = str(uuid4())
             for key, value in kwargs.items():
@@ -26,5 +29,3 @@ class User(BaseModel, Base):
         password = ""
         first_name = ""
         last_name = ""
-    
-    

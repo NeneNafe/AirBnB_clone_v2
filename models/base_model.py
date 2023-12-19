@@ -20,7 +20,6 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Instantiates a new model"""
-        
         self.id = str(uuid4())
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
