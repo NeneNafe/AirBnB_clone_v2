@@ -5,6 +5,7 @@ from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from models import hbnb_storage
 from uuid import uuid4
+from models.place import Place
 
 
 class City(BaseModel, Base):
@@ -14,7 +15,7 @@ class City(BaseModel, Base):
         name = Column(String(128), nullable=False)
         state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
 
-        places = relationship('Place', backref='cities',
+        places = relationship('Place', backref='city',
                               cascade='all, delete, delete-orphan')
 
         def __init__(self, **kwargs):
