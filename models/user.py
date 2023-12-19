@@ -20,7 +20,7 @@ class User(BaseModel, Base):
         def __init__(self, *args, **kwargs):
             self.id = str(uuid4())
             for key, value in kwargs.items():
-                setattr(self, k, v)
+                setattr(self, key, value)
     else:
         email = ""
         password = ""
