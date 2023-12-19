@@ -13,7 +13,7 @@ from uuid import uuid4
 class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = 'places'
-<<<<<<< HEAD
+
     if hbnb_storage == 'db':
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
@@ -24,7 +24,7 @@ class Place(BaseModel, Base):
         max_guest = Column(Integer, default=0, nullable=False)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-=======
+
     city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
     user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
     name = Column(String(128), nullable=False)
@@ -42,7 +42,6 @@ class Place(BaseModel, Base):
         'City', backref='places', cascade='all, delete-orphan',
         single_parent=True
         )
->>>>>>> b3b8f81 (update)
 
     def __init__(self, **kwargs):
         self.id = str(uuid4())
