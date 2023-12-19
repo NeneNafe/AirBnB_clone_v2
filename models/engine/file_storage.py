@@ -9,6 +9,9 @@ class FileStorage:
     __objects = {}
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
+        if cls:
+            return {key: val for key, val in FileStorage.__objects.items()
+                    if key.split('.')[0] == cls.__name__}
         return FileStorage.__objects
         # if cls:
         #     filter_objects = {}
@@ -36,7 +39,8 @@ class FileStorage:
         if obj:
             key = f'{obj.__class__.__name__}.{obj.id}'
             if key in FileStorage.__objects:
-                del self.__objects[key]
+                del FileStorage.__objects[key]
+
     def reload(self):
         """Loads storage dictionary from file"""
         from models.base_model import BaseModel
