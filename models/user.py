@@ -19,7 +19,7 @@ class User(BaseModel, Base):
         places = relationship('User', backref='places', cascade='all, delete, delete-orphan')
         def __init__(self, *args, **kwargs):
             self.id = str(uuid4())
-            for k, v in kwargs.items():
+            for key, value in kwargs.items():
                 setattr(self, k, v)
     else:
         email = ""
