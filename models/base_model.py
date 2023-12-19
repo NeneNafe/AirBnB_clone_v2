@@ -19,7 +19,7 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Instantiates a new model"""
-
+        
         self.id = str(uuid4())
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
@@ -32,24 +32,6 @@ class BaseModel:
                 value = datetime.fromisoformat(value)
             if key != '__class__':
                 self.__dict__[key] = value
-        """Instatntiates a new model"""
-        from models import storage
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-        if kwargs:
-            if 'id' in kwargs:
-                self.id = kwargs['id']
-            if 'created_at' in kwargs:
-                self.created_at = datetime.strptime(
-                    kwargs['created_at'], '%Y-%m-%dT%H:%M:%S.%f')
-            if 'updated_at' in kwargs:
-                self.updated_at = datetime.strptime(
-                    kwargs['updated_at'], '%Y-%m-%dT%H:%M:%S.%f')
-        else:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-        storage.new(self)
 
     def __str__(self):
         """Returns a string representation of the instance"""
