@@ -15,6 +15,7 @@ from models.review import Review
 import json
 import sys
 
+
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
 
@@ -77,7 +78,7 @@ class HBNBCommand(cmd.Cmd):
                 if pline:
                     # check for *args or **kwargs
                     if pline[0] == '{' and pline[-1] =='}'\
-                            and type(eval(pline)) == dict:
+                        and type(eval(pline)) == dict:
                         _args = pline
                     else:
                         _args = pline.replace(',', '')
@@ -134,21 +135,25 @@ class HBNBCommand(cmd.Cmd):
             return
         parameters = commands[1:]
         dict_kv = {}
+        new_instance = HBNBCommand.classes[class_name]()
         for parameter in parameters:
             if not re.match('.+=.+', parameter):
                 continue
-            key, value = parameter.split('=')
-            if not re.match('".*"', value):
-                if not floatnintchecker(value=value):
-                    continue
-                value = float(value)
-                if value.is_integer():
-                    value = int(value)
-            else:
-                value = value.replace("_", " ")[1:-1]
             
-            dict_kv.update({key:value})
-        new_instance = HBNBCommand.classes[class_name]()
+            key, value = parameter.split('=')
+            if hasattr(class_name, key):
+                if key in HBNBCommand.types:
+                    value = HBNBCommand.types[key](value)
+                if type(value) is str and "_" in value or '"' in value:
+                    value = value.replace("_", " ")[1:-1]
+                    if "\"" in value:
+                        i = 0
+                        while value[i] is not None:
+                            if value[i] == "\"":
+                                value = value.partition("\"")[0] +\
+                                '\\' + "\"" + value.partition("\"")[2]
+                            i += 1
+                setattr(new_instance, key, value)
         new_instance.save()
         print(new_instance.id)
     def help_create(self):
