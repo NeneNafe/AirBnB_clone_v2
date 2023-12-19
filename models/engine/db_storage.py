@@ -41,7 +41,7 @@ class DBStorage:
         objcts_dict = {}
 
         if cls is None:
-            for _class in class_list:
+            for _class in self.class_list:
                 list_of_objs = self.__session.query(_class).all()
 
                 for obj in list_of_objs:
@@ -51,18 +51,18 @@ class DBStorage:
             return objcts_dict
 
         cls = eval(cls) if type(cls) is str else cls
-        if cls is not class_list:
+        if cls is not self.class_list:
             return None
 
         objct_list = self.__session.query(cls).all()
         for obj in objct_list:
             key = type(obj).__name__ + '.' + obj.id
             objcts_dict[key] = obj
-        return dict_of_objects
+        return self.dict_of_objects
 
     def new(self, obj):
         """Adds new object to the current db"""
-        self.session.add(obj)
+        self.__session.add(obj)
 
     def save(self):
         """commits all the changes of the curr db session"""

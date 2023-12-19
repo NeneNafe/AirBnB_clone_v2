@@ -8,14 +8,12 @@ from models.city import City
 from models import hbnb_storage
 
 
-class State(BaseModel):
+class State(BaseModel, Base):
     """ State class """
 
     __tablename__ = 'states'
     if hbnb_storage == 'db':
         name = Column(String(128), nullable=False)
-        cities = relationship('City', backref='state',
-                              cascade='all, delete, delete-orphan')
     else:
         name = ''
 
