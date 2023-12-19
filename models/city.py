@@ -24,3 +24,4 @@ class City(BaseModel, Base):
     else:
         name = ''
         state_id = ''
+    places = relationship('Place', backref='cities', cascade='all, delete-orphan')
