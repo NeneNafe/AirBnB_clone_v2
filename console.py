@@ -146,7 +146,7 @@ class HBNBCommand(cmd.Cmd):
                 value = value.replace("_", " ")[1:-1]
             
             dict_kv.update({key:value})
-        new_instance = HBNBCommand.classes[class_name](**dict_kv)
+        new_instance = HBNBCommand.classes[class_name]()
         new_instance.save()
         print(new_instance.id)
     def help_create(self):
