@@ -20,8 +20,8 @@ class User(BaseModel, Base):
             'User', backref='places',
             cascade='all, delete, delete-orphan')
         places = relationship(
-            'User',
-            backref='places', cascade='all, delete, delete-orphan',
+            'Place',
+            backref='user', cascade='all, delete, delete-orphan',
             single_parent=True
             )
 
