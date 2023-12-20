@@ -21,6 +21,11 @@ class User(BaseModel, Base):
             backref='user', cascade='all, delete, delete-orphan',
             single_parent=True
             )
+        reviews = relationship(
+            'Review',
+            backref='user', cascade='all, delete, delete-orphan',
+            single_parent=True
+        )
 
         def __init__(self, *args, **kwargs):
             self.id = str(uuid4())
