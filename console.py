@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ Console Module """
 import cmd
+from datetime import datetime
 import re
 import re
 import sys
@@ -119,12 +120,6 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        def floatnintchecker(value):
-            try:
-                float(value)
-            except ValueError:
-                return False
-            return True
         if not args:
             print("** class name missing **")
             return
@@ -137,21 +132,23 @@ class HBNBCommand(cmd.Cmd):
         dict_kv = {}
         new_instance = HBNBCommand.classes[class_name]()
         for parameter in parameters:
-            if not re.match('.+=.+', parameter):
+            if not isinstance(parameter, str) or \
+                not re.match('.+=.+', parameter):
                 continue
             key, value = parameter.split('=')
-            if hasattr(class_name, key):
+            if hasattr(new_instance, key):
                 if key in HBNBCommand.types:
                     value = HBNBCommand.types[key](value)
-                if type(value) is str and "_" in value or '"' in value:
-                    value = value.replace("_", " ")[1:-1]
-                    if "\"" in value:
-                        i = 0
-                        while value[i] is not None:
-                            if value[i] == "\"":
-                                value = value.partition("\"")[0] +\
-                                    '\\' + "\"" + value.partition("\"")[2]
-                            i += 1
+                if type(value) is str:
+                    if "_" in value or '"' in value:
+                        value = value.replace("_", " ")[1:-1]
+                        if "\"" in value:
+                            i = 0
+                            while i < len(value):
+                                if value[i] == "\"":
+                                    value = value.partition("\"")[0] +\
+                                        '\\' + "\"" + value.partition("\"")[2]
+                                i += 1
                 setattr(new_instance, key, value)
         new_instance.save()
         print(new_instance.id)
@@ -324,7 +321,8 @@ class HBNBCommand(cmd.Cmd):
 
         # retrieve dictionary of current objects
         new_dict = storage.all()[key]
-
+        if 'created_at' not in new_dict.__dict__:
+            new_dict.__dict__['created_at'] = datetime.utcnow()
         # iterate through attr names and values
         for i, att_name in enumerate(args):
             # block only runs on even iterations
