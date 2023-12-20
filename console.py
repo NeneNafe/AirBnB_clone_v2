@@ -133,7 +133,7 @@ class HBNBCommand(cmd.Cmd):
         new_instance = HBNBCommand.classes[class_name]()
         for parameter in parameters:
             if not isinstance(parameter, str) or \
-                not re.match('.+=.+', parameter):
+                    not re.match('.+=.+', parameter):
                 continue
             key, value = parameter.split('=')
             if hasattr(new_instance, key):
