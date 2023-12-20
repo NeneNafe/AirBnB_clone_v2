@@ -34,8 +34,11 @@ class BaseModel:
                 self.__dict__[key] = value
 
     def __str__(self):
-        """Returns a string representation of the instance"""
-        return f'[{self.__class__.__name__}] ({self.id}) {self.__dict__}'
+        """str method
+        Returns:
+            class name, id and __dict__ representation
+        """
+        return f'[{self.__class__.__name__}] ({self.id}) {self.to_dict()}'
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
@@ -52,7 +55,24 @@ class BaseModel:
         if '_sa_instance_state' in our_dict.keys():
             del our_dict['_sa_instance_state']
         return our_dict
+    # def to_dict(self):
+    #     """returns a dictionary containing all keys/values of the instance
+    #     id
+    #     created_at
+    #     updated_at
+    #     """
+    #     # return {
+    #     # "__class__": self.__class__.__name__,
+    #     # "id": self.id,
+    #     # "created_at": self.created_at.isoformat(),
+    #     # "updated_at": self.updated_at.isoformat(),
+    #     # }
+    #     our_dict = self.__dict__.copy()
+    #     our_dict["__class__"] = type(self).__name__
+    #     our_dict["created_at"] = our_dict["created_at"].isoformat()
+    #     our_dict["updated_at"] = our_dict["updated_at"].isoformat()
+    #     return our_dict
 
-    def delete(self):
-        """deletes the current instance from the storage"""
-        models.storage.delete(self)
+    # def delete(self):
+    #     """deletes the current instance from the storage"""
+    #     models.storage.delete(self)
