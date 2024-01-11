@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#sets up web servers for the deployment of web_static
+# sets up web servers for the deployment of web_static
 
 source=/data/web_static/releases/test/
 symlink=/data/web_static/current
