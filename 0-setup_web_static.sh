@@ -17,9 +17,7 @@ echo "snippet content" | sudo tee -a "$source/index.html"
 if [ -e "$symlink" ]; then
     sudo rm "$symlink"
 fi
-
 sudo ln -s $source $symlink
 sudo chown -R ubuntu:ubuntu /data/
 sudo sed -i "/server {/a $configcode" "$configfile"
-
 sudo service nginx restart
