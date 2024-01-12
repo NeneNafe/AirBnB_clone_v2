@@ -14,10 +14,11 @@ env.key_filename = '~/.ssh/school'
 
 def do_deploy(archive_path):
     """Distributes an archive to my web servers"""
-    if not os.path.exists(archive_path):
-        return False
-
     try:
+        if not os.path.exists(archive_path):
+            return False
+
+        # upload archive
         put(archive_path, '/tmp/')
 
         # extract archive dir
@@ -27,7 +28,7 @@ releases/web_static_{}/'.format(timestamp))
 
         run('sudo tar -xzf /tmp/web_static_{}.tgz -C \
 /data/web_static/releases/web_static_{}/'
-                    .format(timestamp, timestamp))
+            .format(timestamp, timestamp))
 
         # remove the uploaded archive from the web server
         run('sudo rm /tmp/web_static_{}.tgz'.format(timestamp))
@@ -39,15 +40,17 @@ releases/web_static_{}/'.format(timestamp))
         # Remove extraneous web static dir
         run('sudo rm -rf /data/web_static/releases/\
 web_static_{}/web_static'
-                    .format(timestamp))
+            .format(timestamp))
 
         # delete existing sym link
         run('sudo rm -rf /data/web_static/current')
-        
+
         # re-establish sym link
         run('sudo ln -s /data/web_static/releases/\
 web_static_{}/ /data/web_static/current'.format(timestamp))
-    except:
+
+        # return True on success
+        return True
+    except Exception as e:
+        print(f"Error: {e}")
         return False
-    
-    return True
