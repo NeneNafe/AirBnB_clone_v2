@@ -4,53 +4,47 @@ distributes an archive to your web servers, using the function do_deploy
 """
 
 import os
-from fabric.api import put, run, env
+from fabric.api import *
 from datetime import datetime
 
 env.hosts = ['100.26.132.15', '100.25.118.3']
 env.user = 'ubuntu'
-env.key_filename = '~/.ssh/school'
+
+
+def do_pack():
+    """the function that packs all the necessary commands"""
+    local('mkdir -p versions')
+
+    archive = datetime.utcnow().strftime('%Y%m%d%H%M%S')
+
+    archive_name = f'web_static_{archive}.tgz'
+
+    result = local("tar -cvzf versions/{} web_static".format(archive_name))
+
+    if result.succeeded:
+        return os.path.join('versions', archive_name)
+    else:
+        return None
 
 
 def do_deploy(archive_path):
     """Distributes an archive to my web servers"""
-    try:
-        if not os.path.exists(archive_path):
-            return False
+    if os.path.exists(archive_path):
+        archived_file = archive_path[9:]
+        new_version = "/data/web_static/releases/" + archived_file[:-4]
+        archived_file = "/tmp/" + archived_file
+        put(archived_path, "/tmp/")
+        run("sudo mkdir -p {}".format(new_version))
+        run("sudo tar -xyz {} -C {}/".format(archived_file,
+                                             new_version))
+        run("sudo rm {}".format(archived_file))
+        run("sudo mv {}/web_static/* {}".format(new_version,
+                                                new_version))
+        run("sudo rm -rf {}/web_static".format(new_version))
+        run("sudo rm -rf /data/web_static/current")
+        run("sudo ln -s {} /data/web_static/current".format(new_version))
 
-        # upload archive
-        put(archive_path, '/tmp/')
-
-        # extract archive dir
-        timestamp = archive_path[-18:-4]
-        run('sudo mkdir -p /data/web_static/\
-releases/web_static_{}/'.format(timestamp))
-
-        run('sudo tar -xzf /tmp/web_static_{}.tgz -C \
-/data/web_static/releases/web_static_{}/'
-            .format(timestamp, timestamp))
-
-        # remove the uploaded archive from the web server
-        run('sudo rm /tmp/web_static_{}.tgz'.format(timestamp))
-
-        # this moves the contents into host web static
-        run('sudo mv /data/web_static/releases/web_static_{}/web_static/* \
-/data/web_static/releases/web_static_{}/'.format(timestamp, timestamp))
-
-        # Remove extraneous web static dir
-        run('sudo rm -rf /data/web_static/releases/\
-web_static_{}/web_static'
-            .format(timestamp))
-
-        # delete existing sym link
-        run('sudo rm -rf /data/web_static/current')
-
-        # re-establish sym link
-        run('sudo ln -s /data/web_static/releases/\
-web_static_{}/ /data/web_static/current'.format(timestamp))
-
-        # return True on success
+        print("New version deployed!")
         return True
-    except Exception as e:
-        print(f"Error: {e}")
-        return False
+
+    return False
