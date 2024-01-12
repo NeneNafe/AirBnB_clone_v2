@@ -8,7 +8,7 @@ from fabric.api import put, run, env
 from datetime import datetime
 
 env.hosts = ['100.26.132.15', '100.25.118.3']
-enx.user = 'ubuntu'
+env.user = 'ubuntu'
 env.key_filename = '~/.ssh/school'
 
 
@@ -20,28 +20,34 @@ def do_deploy(archive_path):
     try:
         put(archive_path, '/tmp/')
 
-        # extract archive data
-        archive_dt = os.path.basename(archive_path)[:-4]
-        run('mkdir -p /data/web_static/releases/{}'.format(archive_dt))
-        run('tar -xzf /tmp/{} -C /data/web_static/releases/{}/'.format(
-            os.path.basename(archive_path), archive_dt))
+        # extract archive dir
+        timestamp = archive_path[-18:-4]
+        run('sudo mkdir -p /data/web_static/\
+releases/web_static_{}/'.format(timestamp))
+
+        run('sudo tar -xzf /tmp/web_static_{}.tgz -C \
+/data/web_static/releases/web_static_{}/'
+                    .format(timestamp, timestamp))
 
         # remove the uploaded archive from the web server
-        run('rm /tmp/{}'.format(os.path.basename(archive_path)))
+        run('sudo rm /tmp/web_static_{}.tgz'.format(timestamp))
 
-        # this moves the contents to a new folder
-        run('mv /data/web_static/releases/{}/web_static/* '
-            '/data/web_static/releases/{}/'.format(archive_dt, archive_dt))
+        # this moves the contents into host web static
+        run('sudo mv /data/web_static/releases/web_static_{}/web_static/* \
+/data/web_static/releases/web_static_{}/'.format(timestamp, timestamp))
 
-        # Remove the old symbolic link
-        run('rm -rf /data/web_static/current')
+        # Remove extraneous web static dir
+        run('sudo rm -rf /data/web_static/releases/\
+web_static_{}/web_static'
+                    .format(timestamp))
 
-        # Cresting a new symbolic link
-        run('ln -s /data/web_static/releases/{}/ /data/web_static/current'
-            .format(archive_dt))
-
-        print("New version deployed!")
-        return True
-    except Exception as e:
-        print(e)
+        # delete existing sym link
+        run('sudo rm -rf /data/web_static/current')
+        
+        # re-establish sym link
+        run('sudo ln -s /data/web_static/releases/\
+web_static_{}/ /data/web_static/current'.format(timestamp))
+    except:
         return False
+    
+    return True
