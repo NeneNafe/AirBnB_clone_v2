@@ -4,47 +4,34 @@ distributes an archive to your web servers, using the function do_deploy
 """
 
 import os
-from fabric.api import *
+from fabric.api import local, put, env, run, sudo
 from datetime import datetime
 
 env.hosts = ['100.26.132.15', '100.25.118.3']
 env.user = 'ubuntu'
 
-
-def do_pack():
-    """the function that packs all the necessary commands"""
-    local('mkdir -p versions')
-
-    archive = datetime.utcnow().strftime('%Y%m%d%H%M%S')
-
-    archive_name = f'web_static_{archive}.tgz'
-
-    result = local("tar -cvzf versions/{} web_static".format(archive_name))
-
-    if result.succeeded:
-        return os.path.join('versions', archive_name)
-    else:
-        return None
-
-
 def do_deploy(archive_path):
-    """Distributes an archive to my web servers"""
-    if os.path.exists(archive_path):
-        archived_file = archive_path[9:]
-        new_version = "/data/web_static/releases/" + archived_file[:-4]
-        archived_file = "/tmp/" + archived_file
-        put(archived_path, "/tmp/")
-        run("sudo mkdir -p {}".format(new_version))
-        run("sudo tar -xyz {} -C {}/".format(archived_file,
-                                             new_version))
-        run("sudo rm {}".format(archived_file))
-        run("sudo mv {}/web_static/* {}".format(new_version,
-                                                new_version))
-        run("sudo rm -rf {}/web_static".format(new_version))
-        run("sudo rm -rf /data/web_static/current")
-        run("sudo ln -s {} /data/web_static/current".format(new_version))
+    """distributes an archive to webservers"""
+    if not os.path.exists(archive_path):
+        return False
 
-        print("New version deployed!")
-        return True
+    basename = os.path.basename(archive_path)
+    rem_archive_path = f"/tmp/{basename}"
 
-    return False
+    try:
+        put(archive_path, rem_archive_path)
+        x_archive = "/data/web_static/releases/{}".format(
+            os.path.splitext(basename)[0]
+        )
+        run(f"mkdir -p {x_archive}")
+        run("tar -xzf {} -C {} --strip-components=1".format(
+            rem_archive_path, x_archive
+            ))
+        run(f"rm -f {rem_archive_path}")
+        symlink = "/data/web_static/current"
+        run(f"rm -rf {symlink}")
+        run(f"ln -s {x_archive}/ {symlink}")
+    except Exception:
+        return False
+
+    return True
