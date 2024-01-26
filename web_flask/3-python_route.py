@@ -24,11 +24,11 @@ def cis_fun(text):
     return 'C {}'.format(text_with_spaces)
 
 
-@app.route('/python/<text>', defaults={'text': 'is cool'})
-def python_is_cool(text):
+@app.route('/python/')
+@app.route('/python/<text>')
+def python_is_cool(text='is cool'):
     """A text python is cool"""
-    text_with_spaces = text.replace('_', ' ')
-    return 'Python {}'.format(text_with_spaces)
+    return 'Python' + text.replace('_', ' ')
 
 
 if __name__ == '__main__':
