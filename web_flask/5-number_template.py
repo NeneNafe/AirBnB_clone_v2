@@ -41,8 +41,8 @@ def print_int(n):
 @app.route('/number_template/<int:n>')
 def num_template(n):
     """retrieves a the template request"""
-    file_name = '5-number.html'
-    return render_template(file_name, n=n)
+    path = '5-number.html'
+    return render_template(path, n=n)
 
 
 if __name__ == '__main__':
