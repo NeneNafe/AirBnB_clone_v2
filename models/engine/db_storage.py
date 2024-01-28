@@ -21,7 +21,7 @@ class DBStorage:
     class_list = [State, City, User, Amenity, Place, Review]
 
     def __init__(self):
-        """Initialises the objects"""
+        """Initializes the objects"""
         user = getenv('HBNB_MYSQL_USER')
         pwd = getenv('HBNB_MYSQL_PWD')
         host = getenv('HBNB_MYSQL_HOST')
