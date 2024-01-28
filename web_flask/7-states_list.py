@@ -17,7 +17,7 @@ def states_list():
 
 
 @app.teardown_appcontext
-def appcont_teardown(arg=None):
+def app_teardown(arg=None):
     """Clean up session"""
     storage.close()
 
