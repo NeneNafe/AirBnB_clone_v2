@@ -41,7 +41,9 @@ def print_int(n):
 @app.route('/number_template/<int:n>')
 def num_template(n):
     """retrieves a the template request"""
-    return render_template('5-number.html', n=n)
+    file_name = '5-number.html'
+    return render_template(file_name, n=n)
+
 
 if __name__ == '__main__':
     app.url_map.strict_slashes = False
