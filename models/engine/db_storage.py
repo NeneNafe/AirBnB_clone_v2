@@ -3,7 +3,7 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy .orm import sessionmaker, scoped_session
-from sqlalchemy import MetData, inspect
+from sqlalchemy import MetaData, inspect
 from models.base_model import BaseModel, Base
 import os
 
